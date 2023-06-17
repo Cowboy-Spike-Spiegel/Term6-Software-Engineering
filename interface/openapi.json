@@ -1,0 +1,2832 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "充电桩调度接口",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "管理员组"
+    },
+    {
+      "name": "客户组"
+    }
+  ],
+  "paths": {
+    "/client/login": {
+      "post": {
+        "summary": "用户登录",
+        "x-apifox-folder": "客户组",
+        "x-apifox-status": "released",
+        "deprecated": false,
+        "description": "前端页面发送登录请求的路径",
+        "tags": [
+          "客户组"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "account": {
+                    "type": "string",
+                    "title": "账户名",
+                    "description": "注册的用户名（邮箱格式）\n参考正则表达式：^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$\n"
+                  },
+                  "password": {
+                    "type": "string",
+                    "title": "密码",
+                    "description": "^.{1,32}$"
+                  }
+                },
+                "x-apifox-orders": [
+                  "account",
+                  "password"
+                ],
+                "x-apifox-refs": {},
+                "required": [
+                  "account"
+                ],
+                "x-apifox-ignore-properties": []
+              },
+              "example": {
+                "account": "n.ykfcdp@dpoyx.kh",
+                "password": "dolore sint deserunt ipsum cupidatat"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "0表示成功登录，非0表示账号或密码错误",
+                      "title": "状态码"
+                    },
+                    "msg": {
+                      "type": "string",
+                      "title": "返回信息",
+                      "description": "失败的时候返回报错信息，成功的时候返回成功信息"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      },
+                      "x-apifox-orders": [
+                        "token"
+                      ],
+                      "required": [
+                        "token"
+                      ],
+                      "x-apifox-ignore-properties": [],
+                      "nullable": true
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-refs": {},
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "code": 0,
+                      "msg": "nostrud exercitation",
+                      "data": {
+                        "token": "veniam Lorem"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2726825/apis/api-81921817-run"
+      }
+    },
+    "/client/index/order": {
+      "get": {
+        "summary": "查询订单信息",
+        "x-apifox-folder": "客户组",
+        "x-apifox-status": "released",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "客户组"
+        ],
+        "parameters": [
+          {
+            "name": "mode",
+            "in": "query",
+            "description": "两个值，HISTORY 和 CURRENT，表示历史订单和当前订单",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "token",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "状态码"
+                    },
+                    "msg": {
+                      "type": "string",
+                      "title": "返回信息",
+                      "description": "失败的时候返回报错信息，成功的时候返回成功信息"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "x-apifox-refs": {
+                          "01H1K17NDSGBQC6MPYS0KJ716X": {
+                            "$ref": "#/components/schemas/Order",
+                            "x-apifox-overrides": {}
+                          }
+                        },
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "title": "订单ID"
+                          },
+                          "user_id": {
+                            "type": "string",
+                            "title": "用户ID"
+                          },
+                          "car_id": {
+                            "type": "string",
+                            "title": "车辆ID"
+                          },
+                          "mode": {
+                            "type": "string",
+                            "title": "充电模式",
+                            "description": "F快充，T慢充"
+                          },
+                          "apply_kwh": {
+                            "type": "number",
+                            "title": "申请度数",
+                            "description": "可能不是最后充电的度数！"
+                          },
+                          "charge_kwh": {
+                            "type": "number",
+                            "title": "实际充电度数",
+                            "description": "确切的充电度数，由时间算出"
+                          },
+                          "state": {
+                            "type": "string",
+                            "title": "订单状态",
+                            "description": "WAITING - 在等待区等待\nDISPATCHED - 在充电桩内等待\nCHARGING - 充电中\nFINISHED - 结束"
+                          },
+                          "charge_price": {
+                            "type": "number",
+                            "title": "充电计价",
+                            "description": "平均充电计价"
+                          },
+                          "service_price": {
+                            "type": "number",
+                            "description": "服务计价",
+                            "title": "服务计价"
+                          },
+                          "fee": {
+                            "type": "number",
+                            "title": "订单最终花费"
+                          },
+                          "create_time": {
+                            "title": "创建时间",
+                            "$ref": "#/components/schemas/Time"
+                          },
+                          "dispatch_time": {
+                            "title": "创建时间",
+                            "$ref": "#/components/schemas/Time"
+                          },
+                          "charge_id": {
+                            "type": "string",
+                            "title": "调度到的充电桩id",
+                            "description": "无为空串"
+                          },
+                          "start_time": {
+                            "title": "创建时间",
+                            "$ref": "#/components/schemas/Time"
+                          },
+                          "finish_time": {
+                            "title": "创建时间",
+                            "$ref": "#/components/schemas/Time"
+                          },
+                          "number": {
+                            "type": "integer",
+                            "title": "排号号码",
+                            "description": "类似叫餐服务，订单当日递增"
+                          },
+                          "front_cars": {
+                            "type": "integer",
+                            "title": "查看前面有多少车",
+                            "description": "排号号码-当前已进入充电区号码-1"
+                          }
+                        },
+                        "required": [
+                          "front_cars",
+                          "id",
+                          "user_id",
+                          "car_id",
+                          "mode",
+                          "apply_kwh",
+                          "charge_kwh",
+                          "state",
+                          "charge_price",
+                          "service_price",
+                          "fee",
+                          "create_time",
+                          "dispatch_time",
+                          "charge_id",
+                          "start_time",
+                          "finish_time"
+                        ],
+                        "x-apifox-orders": [
+                          "01H1K17NDSGBQC6MPYS0KJ716X",
+                          "number",
+                          "front_cars"
+                        ],
+                        "x-apifox-ignore-properties": [
+                          "id",
+                          "user_id",
+                          "car_id",
+                          "mode",
+                          "apply_kwh",
+                          "charge_kwh",
+                          "state",
+                          "charge_price",
+                          "service_price",
+                          "fee",
+                          "create_time",
+                          "dispatch_time",
+                          "charge_id",
+                          "start_time",
+                          "finish_time"
+                        ]
+                      },
+                      "nullable": true
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-refs": {},
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "code": 0,
+                      "msg": "commodo veniam",
+                      "data": [
+                        {
+                          "front_cars": 17,
+                          "id": "27",
+                          "user_id": "48",
+                          "car_id": "6",
+                          "mode": "id irure laboris dolor amet",
+                          "apply_kwh": 28,
+                          "charge_kwh": 38,
+                          "state": "cupidatat veniam esse",
+                          "charge_price": 54,
+                          "service_price": 53,
+                          "fee": 80,
+                          "create_time": "nisi quis ut sed amet",
+                          "dispatch_time": "ullamco sit",
+                          "charge_id": "94",
+                          "start_time": "veniam dolore sint",
+                          "finish_time": "sunt Lorem adipisicing",
+                          "number": 99
+                        },
+                        {
+                          "front_cars": 16,
+                          "id": "76",
+                          "user_id": "99",
+                          "car_id": "27",
+                          "mode": "nisi elit pariatur Excepteur",
+                          "apply_kwh": 73,
+                          "charge_kwh": 96,
+                          "state": "irure",
+                          "charge_price": 92,
+                          "service_price": 1,
+                          "fee": 39,
+                          "create_time": "mollit eiusmod deserunt",
+                          "dispatch_time": "Duis eiusmod",
+                          "charge_id": "86",
+                          "start_time": "Excepteur ad laboris tempor dolore",
+                          "finish_time": "sunt aute",
+                          "number": 90
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2726825/apis/api-81923378-run"
+      },
+      "post": {
+        "summary": "创建当前订单",
+        "x-apifox-folder": "客户组",
+        "x-apifox-status": "released",
+        "deprecated": false,
+        "description": "用户创建订单发出请求的路径",
+        "tags": [
+          "客户组"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "car_id": {
+                    "type": "string",
+                    "title": "车辆ID"
+                  },
+                  "mode": {
+                    "type": "string",
+                    "title": "充电模式"
+                  },
+                  "apply_kwh": {
+                    "type": "number",
+                    "title": "申请度数"
+                  }
+                },
+                "x-apifox-orders": [
+                  "car_id",
+                  "mode",
+                  "apply_kwh"
+                ],
+                "x-apifox-refs": {},
+                "required": [
+                  "apply_kwh",
+                  "mode",
+                  "car_id"
+                ],
+                "x-apifox-ignore-properties": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "状态码",
+                      "description": "成功返回200，失败返回-1"
+                    },
+                    "msg": {
+                      "type": "string",
+                      "title": "返回信息",
+                      "description": "失败的时候返回报错信息，成功的时候返回成功信息"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apifox-orders": [],
+                      "x-apifox-ignore-properties": [],
+                      "nullable": true
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-refs": {},
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "code": 200,
+                      "order": {
+                        "orderID": 56,
+                        "account": "eu_ut_reprehenderit_cillum",
+                        "price": 13,
+                        "kwh": 53,
+                        "createTime": "2012-01-29 01:46:55",
+                        "finishTime": "1986-07-16 08:27:13"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2726825/apis/api-81924379-run"
+      },
+      "patch": {
+        "summary": "更新当前订单",
+        "x-apifox-folder": "客户组",
+        "x-apifox-status": "released",
+        "deprecated": false,
+        "description": "前端需要检验是否修改，不修改则传参为空（不是空串）！！！",
+        "tags": [
+          "客户组"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "title": "订单ID"
+                  },
+                  "mode": {
+                    "type": "string",
+                    "title": "充电模式",
+                    "description": "F快充，T慢充"
+                  },
+                  "apply_kwh": {
+                    "type": "number",
+                    "title": "申请度数"
+                  }
+                },
+                "x-apifox-orders": [
+                  "id",
+                  "mode",
+                  "apply_kwh"
+                ],
+                "x-apifox-refs": {},
+                "required": [
+                  "apply_kwh",
+                  "id",
+                  "mode"
+                ],
+                "x-apifox-ignore-properties": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "状态码"
+                    },
+                    "msg": {
+                      "type": "string",
+                      "title": "返回信息",
+                      "description": "失败的时候返回报错信息，成功的时候返回成功信息"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apifox-orders": [],
+                      "x-apifox-ignore-properties": [],
+                      "nullable": true
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-refs": {},
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "code": 200,
+                      "oldOrder": {
+                        "orderID": 26,
+                        "account": "Excepteur_",
+                        "price": 61,
+                        "kwh": 3,
+                        "createTime": "1988-10-20 10:08:45",
+                        "finishTime": "1980-02-21 13:42:59"
+                      },
+                      "newOrder": {
+                        "orderID": 25,
+                        "account": "velit_ullamco",
+                        "price": 6,
+                        "kwh": 91,
+                        "createTime": "1990-12-27 00:47:42",
+                        "finishTime": "2005-03-28 07:04:56"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2726825/apis/api-81924392-run"
+      },
+      "delete": {
+        "summary": "结束当前订单",
+        "x-apifox-folder": "客户组",
+        "x-apifox-status": "released",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "客户组"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "title": "订单id"
+                  }
+                },
+                "x-apifox-orders": [
+                  "id"
+                ],
+                "x-apifox-refs": {},
+                "required": [
+                  "id"
+                ],
+                "x-apifox-ignore-properties": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "msg": {
+                      "type": "string",
+                      "title": "返回信息",
+                      "description": "失败的时候返回报错信息，成功的时候返回成功信息"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apifox-orders": [],
+                      "x-apifox-refs": {},
+                      "x-apifox-ignore-properties": [],
+                      "nullable": true
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-refs": {},
+                  "x-apifox-ignore-properties": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2726825/apis/api-81925799-run"
+      }
+    },
+    "/admin/index/manage": {
+      "post": {
+        "summary": "开关充电桩",
+        "x-apifox-folder": "客户组",
+        "x-apifox-status": "released",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "客户组"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiIxIiwiQXV0aCI6MSwiZXhwIjoxNjg2MjYxMDE1LCJpYXQiOjE2ODU2NTYyMTUsImlzcyI6IlNwaWtlIiwic3ViIjoidXNlciB0b2tlbiJ9.MUeo9jqLWaOAangGP9dxoQcMTmAj5io9Ep1T18XqLNA",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "mode": {
+                    "type": "string",
+                    "title": "开关模式",
+                    "description": "SWITCHON - 打开\nSWITCHOFF - 关闭"
+                  },
+                  "switch_array": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "description": "充电桩id"
+                    },
+                    "title": "开关的充电站数组"
+                  }
+                },
+                "x-apifox-orders": [
+                  "mode",
+                  "switch_array"
+                ],
+                "required": [
+                  "switch_array",
+                  "mode"
+                ],
+                "x-apifox-ignore-properties": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "状态码"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apifox-orders": [],
+                      "x-apifox-refs": {},
+                      "x-apifox-ignore-properties": [],
+                      "nullable": true
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "required": [
+                    "msg",
+                    "code",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2726825/apis/api-81926644-run"
+      },
+      "get": {
+        "summary": "查询充电站信息",
+        "x-apifox-folder": "管理员组",
+        "x-apifox-status": "released",
+        "deprecated": false,
+        "description": "展示充电桩表单，每行后面跟开关\n最上边显示全部开/关",
+        "tags": [
+          "管理员组"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "返回状态码",
+                      "description": "可自定义"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "description": "这里面的数据一定是系统启动后的",
+                      "type": "object",
+                      "x-apifox-refs": {
+                        "01H1HRJ55ZH8DM461TFM4NDK3T": {
+                          "$ref": "#/components/schemas/Station",
+                          "x-apifox-overrides": {
+                            "name": null
+                          },
+                          "required": [
+                            "wait_array",
+                            "charge_array"
+                          ]
+                        }
+                      },
+                      "x-apifox-orders": [
+                        "01H1HRJ55ZH8DM461TFM4NDK3T"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "title": "id标识"
+                        },
+                        "charge_array": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Charge"
+                          },
+                          "title": "充电桩数组",
+                          "description": "充电站下的充电桩"
+                        },
+                        "wait_array": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/CarBlock"
+                          },
+                          "title": "等待车位数组",
+                          "description": "内容是车位"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "charge_array",
+                        "wait_array"
+                      ],
+                      "x-apifox-ignore-properties": [
+                        "id",
+                        "charge_array",
+                        "wait_array"
+                      ],
+                      "nullable": true
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "自动生成",
+                    "value": {
+                      "code": 17,
+                      "msg": "ex minim ullamco quis reprehenderit",
+                      "data": {
+                        "station": {
+                          "id": "21",
+                          "charge_array": [
+                            {
+                              "id": 50,
+                              "total_charge_duration": 95,
+                              "total_charge_fee": 97,
+                              "total_charge_times": 644311563206,
+                              "state": false,
+                              "mode": "Duis dolore dolore fugiat",
+                              "price": 73,
+                              "car_blocks": [
+                                {
+                                  "name": "众但马约机很",
+                                  "power_capicity": 43,
+                                  "car_id": "53",
+                                  "state": "ut irure dolore commodo",
+                                  "power_current": 15,
+                                  "user_id": "41"
+                                },
+                                {
+                                  "name": "别从放任大色",
+                                  "power_capicity": 5,
+                                  "car_id": "62",
+                                  "state": "sint ut dolor veniam",
+                                  "power_current": 98,
+                                  "user_id": "10"
+                                },
+                                {
+                                  "name": "金第查物油",
+                                  "power_capicity": 56,
+                                  "car_id": "92",
+                                  "state": "aliquip culpa",
+                                  "power_current": 75,
+                                  "user_id": "33"
+                                },
+                                {
+                                  "name": "术技军南应",
+                                  "power_capicity": 81,
+                                  "car_id": "47",
+                                  "state": "ut sit mollit exercitation labore",
+                                  "power_current": 45,
+                                  "user_id": "60"
+                                }
+                              ],
+                              "total_charge": 95,
+                              "total_charge_service": 32,
+                              "total_fee": 36,
+                              "name": "使强该住"
+                            },
+                            {
+                              "id": 69,
+                              "total_charge_duration": 44,
+                              "total_charge_fee": 53,
+                              "total_charge_times": 1596488664661,
+                              "state": false,
+                              "mode": "exercitation",
+                              "price": 39,
+                              "car_blocks": [
+                                {
+                                  "name": "二提认指斗",
+                                  "power_capicity": 15,
+                                  "car_id": "2",
+                                  "state": "nisi ut",
+                                  "power_current": 50,
+                                  "user_id": "33"
+                                }
+                              ],
+                              "total_charge": 24,
+                              "total_charge_service": 25,
+                              "total_fee": 11,
+                              "name": "明海具美"
+                            }
+                          ],
+                          "wait_array": [
+                            {
+                              "name": "只劳民只",
+                              "power_capicity": 64,
+                              "car_id": "19",
+                              "state": "exercitation Excepteur laboris deserunt",
+                              "power_current": 61,
+                              "user_id": "14"
+                            },
+                            {
+                              "name": "后听号",
+                              "power_capicity": 16,
+                              "car_id": "33",
+                              "state": "esse cillum",
+                              "power_current": 50,
+                              "user_id": "32"
+                            },
+                            {
+                              "name": "界便土厂工",
+                              "power_capicity": 68,
+                              "car_id": "16",
+                              "state": "in anim",
+                              "power_current": 61,
+                              "user_id": "96"
+                            },
+                            {
+                              "name": "长专型快说",
+                              "power_capicity": 54,
+                              "car_id": "73",
+                              "state": "voluptate ut minim",
+                              "power_current": 97,
+                              "user_id": "94"
+                            },
+                            {
+                              "name": "面体难成真",
+                              "power_capicity": 49,
+                              "car_id": "62",
+                              "state": "ipsum fugiat dolor qui",
+                              "power_current": 31,
+                              "user_id": "43"
+                            }
+                          ],
+                          "name": "传观前用火光"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2726825/apis/api-82537329-run"
+      }
+    },
+    "/admin/index/report": {
+      "get": {
+        "summary": "查询单个充电桩报表展示",
+        "x-apifox-folder": "管理员组",
+        "x-apifox-status": "released",
+        "deprecated": false,
+        "description": "查看充电桩单个的状态，可展示历史信息",
+        "tags": [
+          "管理员组"
+        ],
+        "parameters": [
+          {
+            "name": "charge_id",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "token",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "状态码"
+                    },
+                    "msg": {
+                      "type": "string",
+                      "title": "返回信息",
+                      "description": "失败的时候返回报错信息，成功的时候返回成功信息"
+                    },
+                    "data": {
+                      "type": "object",
+                      "x-apifox-refs": {
+                        "01H1HRPV8BRS07HV2G8WSHRH8V": {
+                          "$ref": "#/components/schemas/Charge"
+                        }
+                      },
+                      "x-apifox-orders": [
+                        "01H1HRPV8BRS07HV2G8WSHRH8V",
+                        "time"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "title": "充电桩id",
+                          "description": "唯一分配"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "名字"
+                        },
+                        "mode": {
+                          "type": "string",
+                          "title": "充电模式",
+                          "description": "F- 快充 T- 慢充"
+                        },
+                        "state": {
+                          "type": "string",
+                          "title": "工作状态",
+                          "description": "OFF - 关机状态\nWORK - 充电状态\nREST - 空闲状态\nFAULT - 故障状态"
+                        },
+                        "total_charge": {
+                          "type": "number",
+                          "title": "总充电总量"
+                        },
+                        "total_charge_times": {
+                          "type": "number",
+                          "title": "总充电次数"
+                        },
+                        "total_charge_duration": {
+                          "type": "number",
+                          "title": "总充电时长",
+                          "description": "单位为小时"
+                        },
+                        "total_charge_fee": {
+                          "type": "number",
+                          "title": "总充电费用",
+                          "description": "单位为RMB"
+                        },
+                        "total_charge_service": {
+                          "type": "number",
+                          "title": "总服务费用",
+                          "description": "单位为RMB"
+                        },
+                        "total_fee": {
+                          "type": "number",
+                          "title": "总费用",
+                          "description": "单位为RMB"
+                        },
+                        "time": {
+                          "title": "创建时间",
+                          "$ref": "#/components/schemas/Time"
+                        }
+                      },
+                      "required": [
+                        "time",
+                        "id",
+                        "name",
+                        "mode",
+                        "state",
+                        "total_charge",
+                        "total_charge_times",
+                        "total_charge_duration",
+                        "total_charge_fee",
+                        "total_charge_service",
+                        "total_fee"
+                      ],
+                      "x-apifox-ignore-properties": [
+                        "id",
+                        "name",
+                        "mode",
+                        "state",
+                        "total_charge",
+                        "total_charge_times",
+                        "total_charge_duration",
+                        "total_charge_fee",
+                        "total_charge_service",
+                        "total_fee"
+                      ],
+                      "nullable": true
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-refs": {},
+                  "x-apifox-ignore-properties": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2726825/apis/api-81926738-run"
+      }
+    },
+    "/client/register": {
+      "post": {
+        "summary": "用户注册",
+        "x-apifox-folder": "客户组",
+        "x-apifox-status": "released",
+        "deprecated": false,
+        "description": "前端页面发出注册请求的路径\n注册完默认返回一个token，认为登录，可跳转到index",
+        "tags": [
+          "客户组"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "account": {
+                    "type": "string",
+                    "title": "账户名",
+                    "description": "注册的用户名（邮箱格式）\n参考正则表达式：^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$\n"
+                  },
+                  "password": {
+                    "type": "string",
+                    "title": "密码",
+                    "description": "^.{1,32}$"
+                  },
+                  "name": {
+                    "type": "string",
+                    "title": "用户名",
+                    "description": "用户昵称"
+                  }
+                },
+                "x-apifox-orders": [
+                  "account",
+                  "password",
+                  "name"
+                ],
+                "x-apifox-refs": {},
+                "required": [
+                  "account",
+                  "password",
+                  "name"
+                ],
+                "x-apifox-ignore-properties": []
+              },
+              "example": {
+                "account": "o.iylh@cdojfza.gf",
+                "password": "qui sed ea",
+                "name": "处风转国道"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "状态码",
+                      "description": "0表示正常，不为0表示注册失败"
+                    },
+                    "msg": {
+                      "type": "string",
+                      "title": "返回信息",
+                      "description": "失败的时候返回报错信息，成功的时候返回成功信息"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string"
+                        }
+                      },
+                      "x-apifox-orders": [
+                        "token"
+                      ],
+                      "required": [
+                        "token"
+                      ],
+                      "x-apifox-ignore-properties": [],
+                      "nullable": true
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-refs": {},
+                  "x-apifox-ignore-properties": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2726825/apis/api-81928227-run"
+      }
+    },
+    "/admin/login": {
+      "post": {
+        "summary": "管理员登录",
+        "x-apifox-folder": "管理员组",
+        "x-apifox-status": "released",
+        "deprecated": false,
+        "description": "前端页面发送登录请求的路径",
+        "tags": [
+          "管理员组"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "account": {
+                    "type": "string",
+                    "title": "账户名",
+                    "description": "注册的用户名（邮箱格式）\n参考正则表达式：^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$\n"
+                  },
+                  "password": {
+                    "type": "string",
+                    "title": "密码",
+                    "description": "限制长度32\n参考正则式：^.{1,32}$\n"
+                  }
+                },
+                "x-apifox-orders": [
+                  "account",
+                  "password"
+                ],
+                "x-apifox-refs": {},
+                "required": [
+                  "account",
+                  "password"
+                ],
+                "x-apifox-ignore-properties": []
+              },
+              "example": {
+                "account": "u.zomc@oeoeh.mz",
+                "password": "thisIsPass",
+                "session": ""
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "0表示正常，不为0表示注册失败",
+                      "title": "状态码"
+                    },
+                    "msg": {
+                      "type": "string",
+                      "title": "返回信息",
+                      "description": "失败的时候返回报错信息，成功的时候返回成功信息"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string",
+                          "title": "用户token"
+                        }
+                      },
+                      "x-apifox-orders": [
+                        "token"
+                      ],
+                      "required": [
+                        "token"
+                      ],
+                      "x-apifox-ignore-properties": [],
+                      "nullable": true
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-refs": {},
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "code": 200,
+                      "data": {
+                        "token": "asfjecnnasiws",
+                        "account": "_Test_2020211226"
+                      }
+                    }
+                  },
+                  "2": {
+                    "summary": "异常示例",
+                    "value": {
+                      "code": -1,
+                      "data": {
+                        "token": "",
+                        "account": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2726825/apis/api-82534013-run"
+      }
+    },
+    "/admin/index/charge": {
+      "get": {
+        "summary": "查询充电桩服务的车辆信息",
+        "x-apifox-folder": "管理员组",
+        "x-apifox-status": "released",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "管理员组"
+        ],
+        "parameters": [
+          {
+            "name": "charge_id",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "token",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "状态码"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "x-apifox-refs": {
+                        "01H1HRMMSBRKG2KQTZY9EGENT6": {
+                          "$ref": "#/components/schemas/Charge"
+                        }
+                      },
+                      "x-apifox-orders": [
+                        "01H1HRMMSBRKG2KQTZY9EGENT6"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "title": "充电桩id",
+                          "description": "唯一分配"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "名字"
+                        },
+                        "mode": {
+                          "type": "string",
+                          "title": "充电模式",
+                          "description": "F- 快充 T- 慢充"
+                        },
+                        "state": {
+                          "type": "string",
+                          "title": "工作状态",
+                          "description": "OFF - 关机状态\nWORK - 充电状态\nREST - 空闲状态\nFAULT - 故障状态"
+                        },
+                        "car_blocks": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/CarBlock"
+                          },
+                          "title": "充电车位数组",
+                          "description": "空格隔开，大小为2，第一个位置和第二个位置"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "mode",
+                        "state",
+                        "car_blocks"
+                      ],
+                      "x-apifox-ignore-properties": [
+                        "id",
+                        "name",
+                        "mode",
+                        "state",
+                        "car_blocks"
+                      ],
+                      "nullable": true
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "required": [
+                    "msg",
+                    "code",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2726825/apis/api-82534371-run"
+      }
+    },
+    "/client/index/information": {
+      "get": {
+        "summary": "查询用户信息",
+        "x-apifox-folder": "客户组",
+        "x-apifox-status": "released",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "客户组"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "状态码"
+                    },
+                    "msg": {
+                      "type": "string",
+                      "title": "返回信息",
+                      "description": "失败的时候返回报错信息，成功的时候返回成功信息"
+                    },
+                    "data": {
+                      "type": "object",
+                      "x-apifox-refs": {
+                        "01H1WADB8030H2WAKM0NX1TRT2": {
+                          "$ref": "#/components/schemas/User",
+                          "x-apifox-overrides": {
+                            "password": null
+                          }
+                        }
+                      },
+                      "x-apifox-orders": [
+                        "01H1WADB8030H2WAKM0NX1TRT2"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "title": "用户id"
+                        },
+                        "account": {
+                          "type": "string",
+                          "title": "账户名",
+                          "description": "注册的用户名（邮箱格式）\n参考正则表达式：^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$\n"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "用户名"
+                        },
+                        "car_array": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Car"
+                          },
+                          "title": "car_id数组",
+                          "description": "注册时初始化为大小为0"
+                        },
+                        "balance": {
+                          "type": "number",
+                          "title": "用户余额"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "account",
+                        "name",
+                        "car_array",
+                        "balance"
+                      ],
+                      "x-apifox-ignore-properties": [
+                        "id",
+                        "account",
+                        "name",
+                        "car_array",
+                        "balance"
+                      ],
+                      "nullable": true
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-refs": {},
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2726825/apis/api-83240223-run"
+      },
+      "post": {
+        "summary": "更新用户信息",
+        "x-apifox-folder": "客户组",
+        "x-apifox-status": "released",
+        "deprecated": false,
+        "description": "前端需要检验是否修改，不修改则传参为空（不是空串）！！！",
+        "tags": [
+          "客户组"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "old_password": {
+                    "type": "string",
+                    "title": "要更新的密码"
+                  },
+                  "new_password": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string",
+                    "title": "要更新的名称"
+                  }
+                },
+                "x-apifox-orders": [
+                  "old_password",
+                  "new_password",
+                  "name"
+                ],
+                "required": [
+                  "old_password",
+                  "name",
+                  "new_password"
+                ],
+                "x-apifox-ignore-properties": []
+              },
+              "example": {
+                "old_password": "et Excepteur exercitation in",
+                "name": "门联深物计",
+                "new_password": "dolore est"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "状态码"
+                    },
+                    "msg": {
+                      "type": "string",
+                      "title": "返回信息",
+                      "description": "失败的时候返回报错信息，成功的时候返回成功信息"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apifox-orders": [],
+                      "x-apifox-ignore-properties": [],
+                      "nullable": true
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-refs": {},
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2726825/apis/api-83240655-run"
+      }
+    },
+    "/client/index/car": {
+      "get": {
+        "summary": "查询用户车辆信息",
+        "x-apifox-folder": "客户组",
+        "x-apifox-status": "released",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "客户组"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "状态码"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "x-apifox-refs": {
+                          "01H1HRYZXGPC96RZKSZ5MDZCW0": {
+                            "$ref": "#/components/schemas/Car"
+                          }
+                        },
+                        "x-apifox-orders": [
+                          "01H1HRYZXGPC96RZKSZ5MDZCW0"
+                        ],
+                        "properties": {
+                          "car_id": {
+                            "type": "string",
+                            "title": "车辆ID"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "power_capacity": {
+                            "type": "number",
+                            "title": "总电量"
+                          },
+                          "power_current": {
+                            "type": "number",
+                            "title": "当前电量"
+                          }
+                        },
+                        "required": [
+                          "car_id",
+                          "power_capacity",
+                          "power_current"
+                        ],
+                        "x-apifox-ignore-properties": [
+                          "car_id",
+                          "name",
+                          "power_capacity",
+                          "power_current"
+                        ]
+                      },
+                      "nullable": true
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-refs": {},
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "code": 0,
+                      "msg": "nostrud",
+                      "data": [
+                        {
+                          "car_id": "32",
+                          "power_capacity": 33,
+                          "power_current": 12,
+                          "name": "车1"
+                        },
+                        {
+                          "car_id": "26",
+                          "power_capacity": 66,
+                          "power_current": 12,
+                          "name": "车2"
+                        },
+                        {
+                          "car_id": "58",
+                          "power_capacity": 63,
+                          "power_current": 40,
+                          "name": "车3"
+                        },
+                        {
+                          "car_id": "91",
+                          "power_capacity": 92,
+                          "power_current": 84,
+                          "name": "车4"
+                        },
+                        {
+                          "car_id": "55",
+                          "power_capacity": 71,
+                          "power_current": 17,
+                          "name": "车5"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2726825/apis/api-83240703-run"
+      },
+      "post": {
+        "summary": "新增用户车辆信息",
+        "x-apifox-folder": "客户组",
+        "x-apifox-status": "released",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "客户组"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "title": "车辆名称",
+                    "nullable": true
+                  },
+                  "power_capacity": {
+                    "type": "number",
+                    "title": "总电量",
+                    "nullable": true
+                  },
+                  "power_current": {
+                    "type": "number",
+                    "title": "当前电量",
+                    "nullable": true
+                  }
+                },
+                "x-apifox-orders": [
+                  "name",
+                  "power_capacity",
+                  "power_current"
+                ],
+                "required": [
+                  "power_current",
+                  "power_capacity",
+                  "name"
+                ],
+                "x-apifox-ignore-properties": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "状态码"
+                    },
+                    "msg": {
+                      "type": "string",
+                      "title": "返回信息"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apifox-orders": [],
+                      "title": "数据",
+                      "x-apifox-ignore-properties": [],
+                      "nullable": true
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-refs": {},
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "code": 0,
+                      "msg": "添加成功!",
+                      "data": {}
+                    }
+                  },
+                  "2": {
+                    "summary": "异常示例",
+                    "value": {
+                      "code": 1,
+                      "msg": "添加失败，报错信息：err",
+                      "data": {}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2726825/apis/api-83240716-run"
+      },
+      "patch": {
+        "summary": "更新用户车辆信息",
+        "x-apifox-folder": "客户组",
+        "x-apifox-status": "released",
+        "deprecated": false,
+        "description": "前端需要检验是否修改，不修改则传参为空（不是空串）！！！",
+        "tags": [
+          "客户组"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "car_id": {
+                    "type": "string",
+                    "title": "车辆ID"
+                  },
+                  "name": {
+                    "type": "string",
+                    "title": "车辆名称"
+                  },
+                  "power_capacity": {
+                    "type": "number",
+                    "title": "总电量"
+                  },
+                  "power_current": {
+                    "type": "number",
+                    "title": "当前电量"
+                  }
+                },
+                "x-apifox-orders": [
+                  "car_id",
+                  "name",
+                  "power_capacity",
+                  "power_current"
+                ],
+                "required": [
+                  "power_current",
+                  "power_capacity",
+                  "name",
+                  "car_id"
+                ],
+                "x-apifox-ignore-properties": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "状态码"
+                    },
+                    "msg": {
+                      "type": "string",
+                      "title": "返回信息"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apifox-orders": [],
+                      "x-apifox-refs": {},
+                      "x-apifox-ignore-properties": [],
+                      "nullable": true
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-refs": {},
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "code": 0,
+                      "msg": "修改成功",
+                      "data": {}
+                    }
+                  },
+                  "2": {
+                    "summary": "异常示例",
+                    "value": {
+                      "code": 1,
+                      "msg": "修改失败",
+                      "data": {}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2726825/apis/api-83240840-run"
+      },
+      "delete": {
+        "summary": "删除用户车辆信息",
+        "x-apifox-folder": "客户组",
+        "x-apifox-status": "pending",
+        "deprecated": false,
+        "description": "可以不实现！！！",
+        "tags": [
+          "客户组"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "car_id": {
+                    "type": "string",
+                    "title": "车辆ID"
+                  }
+                },
+                "x-apifox-orders": [
+                  "car_id"
+                ],
+                "required": [
+                  "car_id"
+                ],
+                "x-apifox-ignore-properties": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "title": "状态码"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apifox-orders": [],
+                      "x-apifox-refs": {},
+                      "x-apifox-ignore-properties": [],
+                      "nullable": true
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-refs": {},
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "code": 0,
+                      "msg": "删除成功",
+                      "data": {}
+                    }
+                  },
+                  "2": {
+                    "summary": "异常示例",
+                    "value": {
+                      "code": 1,
+                      "msg": "删除失败",
+                      "data": {}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2726825/apis/api-83240893-run"
+      }
+    },
+    "/client/index/recharge": {
+      "post": {
+        "summary": "充值",
+        "x-apifox-folder": "客户组",
+        "x-apifox-status": "pending",
+        "deprecated": false,
+        "description": "可以不实现！！！",
+        "tags": [
+          "客户组"
+        ],
+        "parameters": [
+          {
+            "name": "amount",
+            "in": "query",
+            "description": "单位人名币，精确到小数点后两文",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "token",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apifox-orders": [],
+                      "x-apifox-ignore-properties": [],
+                      "nullable": true
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2726825/apis/api-84801465-run"
+      }
+    },
+    "/admin/index": {
+      "get": {
+        "summary": "管理员首页",
+        "x-apifox-folder": "管理员组",
+        "x-apifox-status": "released",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "管理员组"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2726825/apis/api-85313569-run"
+      }
+    },
+    "/client/index": {
+      "get": {
+        "summary": "用户首页",
+        "x-apifox-folder": "客户组",
+        "x-apifox-status": "released",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "客户组"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2726825/apis/api-85313585-run"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Car": {
+        "type": "object",
+        "properties": {
+          "car_id": {
+            "type": "string",
+            "title": "车辆ID"
+          },
+          "user_id": {
+            "type": "string",
+            "title": "用户ID"
+          },
+          "name": {
+            "type": "string"
+          },
+          "power_capacity": {
+            "type": "number",
+            "title": "总电量"
+          },
+          "power_current": {
+            "type": "number",
+            "title": "当前电量"
+          }
+        },
+        "title": "车辆信息",
+        "x-apifox-orders": [
+          "car_id",
+          "user_id",
+          "name",
+          "power_capacity",
+          "power_current"
+        ],
+        "required": [
+          "power_capacity",
+          "car_id",
+          "power_current",
+          "user_id"
+        ],
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": "用户信息组"
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "用户id"
+          },
+          "account": {
+            "type": "string",
+            "title": "账户名",
+            "description": "注册的用户名（邮箱格式）\n参考正则表达式：^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$\n"
+          },
+          "password": {
+            "type": "string",
+            "title": "密码",
+            "description": "^.{1,32}$"
+          },
+          "name": {
+            "type": "string",
+            "title": "用户名"
+          },
+          "car_array": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Car"
+            },
+            "title": "car_id数组",
+            "description": "注册时初始化为大小为0"
+          },
+          "balance": {
+            "type": "number",
+            "title": "用户余额"
+          }
+        },
+        "title": "用户",
+        "x-apifox-orders": [
+          "id",
+          "account",
+          "password",
+          "name",
+          "car_array",
+          "balance"
+        ],
+        "required": [
+          "account",
+          "car_array",
+          "name",
+          "id",
+          "password",
+          "balance"
+        ],
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": "用户信息组"
+      },
+      "Station": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "id标识"
+          },
+          "name": {
+            "type": "string"
+          },
+          "charge_array": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Charge"
+            },
+            "title": "充电桩数组",
+            "description": "充电站下的充电桩"
+          },
+          "wait_array": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CarBlock"
+            },
+            "title": "等待车位数组",
+            "description": "内容是车位"
+          }
+        },
+        "title": "充电站",
+        "x-apifox-orders": [
+          "id",
+          "name",
+          "charge_array",
+          "wait_array"
+        ],
+        "required": [
+          "id",
+          "charge_array",
+          "wait_array"
+        ],
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": "充电桩组"
+      },
+      "CarBlock": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "string",
+            "title": "此车位的车辆分配的number"
+          },
+          "car_id": {
+            "type": "string",
+            "title": "车辆ID"
+          },
+          "user_id": {
+            "type": "string",
+            "title": "用户ID"
+          },
+          "name": {
+            "type": "string"
+          },
+          "power_capacity": {
+            "type": "number",
+            "title": "总电量"
+          },
+          "power_current": {
+            "type": "number",
+            "title": "当前电量"
+          },
+          "apply_kwh": {
+            "type": "number",
+            "title": "申请的充电量"
+          },
+          "wait_time": {
+            "type": "number",
+            "title": "等待时间",
+            "description": "单位为小时"
+          },
+          "state": {
+            "type": "string",
+            "title": "车位内的车辆状态",
+            "description": "WAITING - 在等待区等待DISPATCHED - 在充电桩内等待CHARGING - 充电中"
+          }
+        },
+        "x-apifox-orders": [
+          "number",
+          "01H1KWSB5YV2WTH25JDF4PPE48",
+          "apply_kwh",
+          "wait_time",
+          "state"
+        ],
+        "x-apifox-refs": {
+          "01H1KWSB5YV2WTH25JDF4PPE48": {
+            "$ref": "#/components/schemas/Car"
+          }
+        },
+        "required": [
+          "state",
+          "apply_kwh",
+          "wait_time",
+          "number",
+          "car_id",
+          "user_id",
+          "power_capacity",
+          "power_current"
+        ],
+        "title": "车位信息",
+        "x-apifox-ignore-properties": [
+          "car_id",
+          "user_id",
+          "name",
+          "power_capacity",
+          "power_current"
+        ],
+        "x-apifox-folder": "充电桩组"
+      },
+      "Charge": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "充电桩id",
+            "description": "唯一分配"
+          },
+          "name": {
+            "type": "string",
+            "title": "名字"
+          },
+          "mode": {
+            "type": "string",
+            "title": "充电模式",
+            "description": "F- 快充 T- 慢充"
+          },
+          "state": {
+            "type": "string",
+            "title": "工作状态",
+            "description": "OFF - 关机状态\nWORK - 充电状态\nREST - 空闲状态\nFAULT - 故障状态"
+          },
+          "total_charge": {
+            "type": "number",
+            "title": "总充电总量"
+          },
+          "total_charge_times": {
+            "type": "number",
+            "title": "总充电次数"
+          },
+          "total_charge_duration": {
+            "type": "number",
+            "title": "总充电时长",
+            "description": "单位为小时"
+          },
+          "total_charge_fee": {
+            "type": "number",
+            "title": "总充电费用",
+            "description": "单位为RMB"
+          },
+          "total_charge_service": {
+            "type": "number",
+            "title": "总服务费用",
+            "description": "单位为RMB"
+          },
+          "total_fee": {
+            "type": "number",
+            "title": "总费用",
+            "description": "单位为RMB"
+          },
+          "car_blocks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CarBlock"
+            },
+            "title": "充电车位数组",
+            "description": "空格隔开，大小为2，第一个位置和第二个位置"
+          }
+        },
+        "title": "充电桩",
+        "x-apifox-orders": [
+          "id",
+          "name",
+          "mode",
+          "state",
+          "total_charge",
+          "total_charge_times",
+          "total_charge_duration",
+          "total_charge_fee",
+          "total_charge_service",
+          "total_fee",
+          "car_blocks"
+        ],
+        "required": [
+          "id",
+          "total_charge_duration",
+          "total_charge_fee",
+          "total_charge_times",
+          "state",
+          "mode",
+          "car_blocks",
+          "total_charge",
+          "total_charge_service",
+          "total_fee",
+          "name"
+        ],
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": "充电桩组"
+      },
+      "Time": {
+        "type": "string",
+        "title": "时间",
+        "description": "xxxx-xx-xx xx:xx:xx",
+        "x-apifox-folder": ""
+      },
+      "Order": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "订单ID"
+          },
+          "user_id": {
+            "type": "string",
+            "title": "用户ID"
+          },
+          "car_id": {
+            "type": "string",
+            "title": "车辆ID"
+          },
+          "mode": {
+            "type": "string",
+            "title": "充电模式",
+            "description": "F快充，T慢充"
+          },
+          "apply_kwh": {
+            "type": "number",
+            "title": "申请度数",
+            "description": "可能不是最后充电的度数！"
+          },
+          "charge_kwh": {
+            "type": "number",
+            "title": "实际充电度数",
+            "description": "确切的充电度数，由时间算出"
+          },
+          "state": {
+            "type": "string",
+            "title": "订单状态",
+            "description": "WAITING - 在等待区等待\nDISPATCHED - 在充电桩内等待\nCHARGING - 充电中\nFINISHED - 结束"
+          },
+          "charge_price": {
+            "type": "number",
+            "title": "充电计价",
+            "description": "平均充电计价"
+          },
+          "service_price": {
+            "type": "number",
+            "description": "服务计价",
+            "title": "服务计价"
+          },
+          "fee": {
+            "type": "number",
+            "title": "订单最终花费"
+          },
+          "create_time": {
+            "title": "创建时间",
+            "$ref": "#/components/schemas/Time"
+          },
+          "dispatch_time": {
+            "title": "创建时间",
+            "$ref": "#/components/schemas/Time"
+          },
+          "charge_id": {
+            "type": "string",
+            "title": "调度到的充电桩id",
+            "description": "无为空串"
+          },
+          "start_time": {
+            "title": "创建时间",
+            "$ref": "#/components/schemas/Time"
+          },
+          "finish_time": {
+            "title": "创建时间",
+            "$ref": "#/components/schemas/Time"
+          }
+        },
+        "x-apifox-orders": [
+          "id",
+          "user_id",
+          "car_id",
+          "mode",
+          "apply_kwh",
+          "charge_kwh",
+          "state",
+          "charge_price",
+          "service_price",
+          "fee",
+          "create_time",
+          "dispatch_time",
+          "charge_id",
+          "start_time",
+          "finish_time"
+        ],
+        "title": "订单信息",
+        "required": [
+          "charge_price",
+          "apply_kwh",
+          "id",
+          "create_time",
+          "state",
+          "mode",
+          "fee",
+          "car_id",
+          "user_id",
+          "dispatch_time",
+          "charge_id",
+          "start_time",
+          "finish_time",
+          "service_price",
+          "charge_kwh"
+        ],
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": "订单组"
+      }
+    }
+  },
+  "servers": []
+}
